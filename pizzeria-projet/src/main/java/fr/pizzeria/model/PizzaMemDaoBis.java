@@ -27,11 +27,12 @@ public class PizzaMemDaoBis implements IPizzaDao{
 		// load a properties file
 		  final Properties prop = new Properties();
 		  prop.load(input);
-		
-		  String url = prop.getProperty("db.url");
+		  String Environnement = prop.getProperty("ENVIRONNEMENT");
+		  String url = prop.getProperty(Environnement+".MYSQL_ADDON_URL");
 		  // TODO : export logs in external file
-		  String user = prop.getProperty("db.username");
-		  String passwd = prop.getProperty("db.password ");
+		  String user = prop.getProperty(Environnement+".MYSQL_ADDON_USER");
+		  String passwd = prop.getProperty(Environnement+".MYSQL_ADDON_PASSWORD");
+	      input.close();
 	      
 	      conn = (Connection) DriverManager.getConnection(url, user, passwd);
 	      System.out.println("Connexion effective !");         

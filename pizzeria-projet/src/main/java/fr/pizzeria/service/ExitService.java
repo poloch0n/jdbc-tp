@@ -2,6 +2,7 @@ package fr.pizzeria.service;
 
 import fr.pizzeria.ShowMenu;
 import fr.pizzeria.model.PizzaMemDao;
+import fr.pizzeria.model.PizzaMemDaoBis;
 
 public class ExitService extends MenuService{
 
@@ -9,7 +10,7 @@ public class ExitService extends MenuService{
 		// TODO Auto-generated constructor stub
 	}
 	
-	void executeUc(PizzaMemDao dao) {
+	public void executeUc(PizzaMemDaoBis daobis) {
 		ShowMenu.showText("Aurevoir☹ ");
 		System.exit(0);
 	}
