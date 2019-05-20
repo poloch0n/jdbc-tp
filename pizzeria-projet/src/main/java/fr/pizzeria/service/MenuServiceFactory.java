@@ -15,7 +15,10 @@ public class MenuServiceFactory {
 		case 3:
 			return new ModifierPizzaService();
 		case 4:
-			return new SupprimerPizzaService();
+			return new SupprimerPizzaService();			
+		case 5:
+			return new InitialiserPizzaService();
+			
 		case 99:
 			return new ExitService();
 		default:

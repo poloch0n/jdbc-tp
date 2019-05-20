@@ -11,7 +11,7 @@ public class ShowMenu {
 	}
 	
 	public static void showMenuOptions() {
-		showText("1. Lister les pizzas \r\n2. Ajouter une nouvelle pizza \r\n3. Mettre à jour une pizza \r\n4. Supprimer une pizza \r\n99. Sortir");
+		showText("1. Lister les pizzas \r\n2. Ajouter une nouvelle pizza \r\n3. Mettre à jour une pizza \r\n4. Supprimer une pizza\r\n5. Initialiser la base de donnée\r\n99. Sortir");
 	}	
 	
 	public static void showText(String texte) {

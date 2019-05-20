@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
 
 public class PizzaMemDaoBis implements IPizzaDao{
 	
@@ -217,7 +218,43 @@ public class PizzaMemDaoBis implements IPizzaDao{
 		}
 		return error;
 	}
-	boolean isNegative(double d) {
+	
+	private boolean isNegative(double d) {
 	     return Double.compare(d, 0.0) < 0;
+	}
+	
+	public void initialiseBddPizza() {
+		try {
+
+			String sqlDropTablePizzeria = "DROP TABLE `pizzas`;";
+			String sqlCreateTable = "CREATE TABLE `pizzas` (\r\n" + 
+					"  `id_Pizza` int(11) NOT NULL AUTO_INCREMENT,\r\n" + 
+					"  `code` varchar(3) NOT NULL,\r\n" + 
+					"  `libelle` varchar(45) NOT NULL,\r\n" + 
+					"  `prix` decimal(5,2) NOT NULL,\r\n" + 
+					"  PRIMARY KEY (`id_Pizza`)\r\n" + 
+					") ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;";
+			String sqlInsertPizzas = "INSERT INTO `pizzas`\r\n" + 
+					"( `code`, `libelle`, `prix`) VALUES "+
+							"(\"PEP\",\"Pépéoni\", 12.50),"+
+							"(\"MAR\",\"Margherita\", 14.00),"+
+							"(\"REI\",\"La Reine\", 11.50),"+
+							"(\"FRO\",\"La 4 fromages\", 12.00),"+
+							"(\"CAN\",\"La cannibale\", 12.50),"+
+							"(\"SAV\",\"La savoyarde\", 13.00),"+
+							"(\"ORI\",\"L'orientale\", 13.50),"+
+							"(\"IND\",\"L'indienne\", 14.00);";
+			
+			Connection con = connectBdd();
+
+		    Statement stmt = (Statement) con.createStatement();
+		    
+		    stmt.executeUpdate(sqlDropTablePizzeria);
+		    stmt.executeUpdate(sqlCreateTable);
+		    stmt.executeUpdate(sqlInsertPizzas);
+		} catch(SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
