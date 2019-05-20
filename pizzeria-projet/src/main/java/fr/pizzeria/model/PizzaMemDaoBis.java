@@ -1,11 +1,14 @@
 package fr.pizzeria.model;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.mysql.jdbc.Connection;
 
@@ -18,13 +21,19 @@ public class PizzaMemDaoBis implements IPizzaDao{
 	      Class.forName("com.mysql.jdbc.Driver");
 //	      System.out.println("Driver O.K.");
 
-	      String url = "jdbc:mysql://localhost:3306/pizzeria";
-	      // TODO : export logs in external file
-	      String user = "root";
-	      String passwd = "";
+		  InputStream input = new FileInputStream("./jdbc.properties");
+		
+		// load a properties file
+		  final Properties prop = new Properties();
+		  prop.load(input);
+		
+		  String url = prop.getProperty("db.url");
+		  // TODO : export logs in external file
+		  String user = prop.getProperty("db.username");
+		  String passwd = prop.getProperty("db.password ");
 	      
 	      conn = (Connection) DriverManager.getConnection(url, user, passwd);
-//	      System.out.println("Connexion effective !");         
+	      System.out.println("Connexion effective !");         
 	         
 	    } catch (Exception e) {
 	      e.printStackTrace();
