@@ -2,6 +2,7 @@ package fr.pizzeria;
 
 import java.util.Scanner;
 
+import fr.pizzeria.model.CategoriePizza;
 import fr.pizzeria.model.Pizza;
 
 public class FromMenu {
@@ -21,8 +22,15 @@ public class FromMenu {
 		
 		showText("Veuillez saisir le prix :");
 		double prix = getPrice();
-		
-		return new Pizza(code,libelle,prix);
+
+		showText("Veuillez choisir une catégorie:");
+		//afficher toutes les catégories
+		CategoriePizza categorie = null;
+		for(int i = 0;i < CategoriePizza.values().length;i++) {
+			showText((i+1) +". "+CategoriePizza.values()[i].toString());
+		}
+		categorie = CategoriePizza.values()[getCategorie()-1];
+		return new Pizza(code,libelle,prix,categorie);
 	}
 	
 	public static String getCode() {
@@ -38,6 +46,11 @@ public class FromMenu {
 	public static Double getPrice() {
 		Double prix = getDoubleFromMenu();
 		return prix;
+	}
+	
+	public static Integer getCategorie() {
+		Integer categorie = getIntFromMenu();
+		return categorie;
 	}
 	
 	public static String getStringFromMenu() {

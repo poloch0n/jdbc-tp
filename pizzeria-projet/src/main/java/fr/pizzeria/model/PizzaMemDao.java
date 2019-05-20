@@ -10,9 +10,9 @@ public class PizzaMemDao implements IPizzaDao {
 	PizzaMemDao(){
 		initialisationMenu();
 	}
-	private void addPizzaMenuWithId(Integer id,String code, String libelle, double prix) {
+	private void addPizzaMenuWithId(Integer id,String code, String libelle, double prix,CategoriePizza categorie) {
 		
-		Pizza pizza = new Pizza(id,code,libelle,prix);
+		Pizza pizza = new Pizza(id,code,libelle,prix,categorie);
 		addPizza(pizza);
 	}
 	
@@ -49,7 +49,7 @@ public class PizzaMemDao implements IPizzaDao {
 		int index;
 		for (index = 0; index < menu.size(); index++ ) {
 			if(menu.get(index).code.equals(codePizza)) {
-				return new Pizza(menu.get(index).id,menu.get(index).code,menu.get(index).libelle,menu.get(index).prix);
+				return new Pizza(menu.get(index).id,menu.get(index).code,menu.get(index).libelle,menu.get(index).prix,menu.get(index).categorie);
 			}
 		}
 		return null;
@@ -78,14 +78,14 @@ public class PizzaMemDao implements IPizzaDao {
 	
 	void initialisationMenu() {
 		menu = new ArrayList<Pizza>();
-		addPizzaMenuWithId(0, "PEP","P�p�roni", 12.50);
-		addPizzaMenuWithId(1, "MAR","Margherita", 14.00);
-		addPizzaMenuWithId(2, "REI","La Reine", 11.50);
-		addPizzaMenuWithId(3, "FRO","La 4 fromages", 12.00);
-		addPizzaMenuWithId(4, "CAN","La cannibale", 12.50);
-		addPizzaMenuWithId(5, "SAV","La savoyarde", 13.00);
-		addPizzaMenuWithId(6, "ORI","L'orientale", 13.50);
-		addPizzaMenuWithId(7, "IND","L'indienne", 14.00);
+		addPizzaMenuWithId(0, "PEP","Pépéroni", 12.50,CategoriePizza.VIANDE);
+		addPizzaMenuWithId(1, "MAR","Margherita", 14.00,CategoriePizza.VIANDE);
+		addPizzaMenuWithId(2, "REI","La Reine", 11.50,CategoriePizza.SANS_VIANDE);
+		addPizzaMenuWithId(3, "FRO","La 4 fromages", 12.00,CategoriePizza.SANS_VIANDE);
+		addPizzaMenuWithId(4, "CAN","La cannibale", 12.50,CategoriePizza.VIANDE);
+		addPizzaMenuWithId(5, "SAV","La savoyarde", 13.00,CategoriePizza.VIANDE);
+		addPizzaMenuWithId(6, "ORI","L'orientale", 13.50,CategoriePizza.VIANDE);
+		addPizzaMenuWithId(7, "IND","L'indienne", 14.00,CategoriePizza.VIANDE);
 		
 	}
 	

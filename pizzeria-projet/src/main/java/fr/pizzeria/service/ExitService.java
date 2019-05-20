@@ -1,7 +1,6 @@
 package fr.pizzeria.service;
 
 import fr.pizzeria.ShowMenu;
-import fr.pizzeria.model.PizzaMemDao;
 import fr.pizzeria.model.PizzaMemDaoBis;
 
 public class ExitService extends MenuService{

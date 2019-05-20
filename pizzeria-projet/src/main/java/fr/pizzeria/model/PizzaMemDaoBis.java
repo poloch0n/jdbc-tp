@@ -33,7 +33,7 @@ public class PizzaMemDaoBis implements IPizzaDao{
 		  String user = prop.getProperty(Environnement+".MYSQL_ADDON_USER");
 		  String passwd = prop.getProperty(Environnement+".MYSQL_ADDON_PASSWORD");
 	      input.close();
-	      
+
 	      conn = (Connection) DriverManager.getConnection(url, user, passwd);
 	      System.out.println("Connexion effective !");         
 	         
@@ -59,8 +59,8 @@ public class PizzaMemDaoBis implements IPizzaDao{
 					String code = rs.getString("code");
 					String libelle = rs.getString("libelle");
 					double prix = rs.getDouble("prix");
-					
-					Pizza newPizza = new Pizza(id_pizza,code,libelle,prix);
+					String categorie = rs.getString("categorie");
+					Pizza newPizza = new Pizza(id_pizza,code,libelle,prix,CategoriePizza.fromString(categorie));
 
 					menu.add(newPizza);
 		        }
@@ -78,13 +78,14 @@ public class PizzaMemDaoBis implements IPizzaDao{
 	
 	public void addPizza(Pizza pizza) {
 		try {
-			String sql = "Insert into pizzas (code, libelle, prix) values ( ?, ? , ?)";
+			String sql = "Insert into pizzas (code, libelle, prix, categorie) values (?,?,?,?)";
 			Connection con = connectBdd();
 			PreparedStatement statement = con.prepareStatement(sql);
 			// TODO : to think injection here care
 			statement.setString(1,pizza.code);
 			statement.setString(2,pizza.libelle);
 			statement.setDouble(3,pizza.prix);
+			statement.setString(4, pizza.categorie.toString());
 			statement.executeUpdate();
 
 			statement.close();
@@ -100,13 +101,14 @@ public class PizzaMemDaoBis implements IPizzaDao{
 		try {		
 			Pizza pizzaToUpdate = this.getPizzaFromCode(codePizza);
 
-			String sql = "Update pizzas SET code = ?, libelle = ?, prix = ? where id_pizza = ?";
+			String sql = "Update pizzas SET code = ?, libelle = ?, prix = ?, categorie = ? where id_pizza = ?";
 			Connection con = connectBdd();
 			PreparedStatement statement = con.prepareStatement(sql);
 			statement.setString(1, pizza.code);
 			statement.setString(2, pizza.libelle);
 			statement.setDouble(3, pizza.prix);
-			statement.setInt(4, pizzaToUpdate.id);
+			statement.setString(4, pizza.categorie.toString());
+			statement.setInt(5, pizzaToUpdate.id);
 			statement.executeUpdate();
 
 			statement.close();
@@ -134,7 +136,7 @@ public class PizzaMemDaoBis implements IPizzaDao{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Pizza getPizzaFromCode(String codePizza) {
 		try {
 
@@ -147,16 +149,13 @@ public class PizzaMemDaoBis implements IPizzaDao{
 			Pizza pizza = null;
 			if (rs != null) {
 				while (rs.next()) {
-					
 					int id_pizza = rs.getInt("Id_pizza");
 					String code = rs.getString("code");
 					String libelle = rs.getString("libelle");
 					double prix = rs.getDouble("prix");
-
-					pizza = new Pizza(id_pizza,code,libelle,prix);
+					String categorie = rs.getString("categorie");
+					pizza = new Pizza(id_pizza,code,libelle,prix,CategoriePizza.fromString(categorie));
 		        }
-			} else {
-				return null;
 			}
 			rs.close();
 			statement.close();
@@ -208,10 +207,10 @@ public class PizzaMemDaoBis implements IPizzaDao{
 		String error = "";
 		for (Pizza pizzaSaved : getPizzas()) {
 			if(pizzaSaved.code.equals(pizza.code)) {
-				error += "\r\nCe code a d�j� �t� utilis�";
+				error += "\r\nCe code a déjà été utilisé";
 			}
 			if(pizzaSaved.libelle.equals(pizza.libelle)) {
-				error += "\r\nCe libelle a d�j� �t� utilis�";
+				error += "\r\nCe libelle a déjà été utilisé";
 			}
 			if(methode.equals("add") && pizzaSaved.id == pizza.id) {
 					pizza.id ++;
@@ -226,25 +225,25 @@ public class PizzaMemDaoBis implements IPizzaDao{
 	
 	public void initialiseBddPizza() {
 		try {
-
-			String sqlDropTablePizzeria = "DROP TABLE `pizzas`;";
+			String sqlDropTablePizzeria = "DROP TABLE if exists `pizzas` ;";
 			String sqlCreateTable = "CREATE TABLE `pizzas` (\r\n" + 
 					"  `id_Pizza` int(11) NOT NULL AUTO_INCREMENT,\r\n" + 
 					"  `code` varchar(3) NOT NULL,\r\n" + 
 					"  `libelle` varchar(45) NOT NULL,\r\n" + 
-					"  `prix` decimal(5,2) NOT NULL,\r\n" + 
+					"  `prix` decimal(5,2) NOT NULL,\r\n" +
+					"  `categorie` enum('Viande','Poisson','Sans viande') DEFAULT NULL, \r\n" +
 					"  PRIMARY KEY (`id_Pizza`)\r\n" + 
-					") ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;";
+					") ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;";
 			String sqlInsertPizzas = "INSERT INTO `pizzas`\r\n" + 
-					"( `code`, `libelle`, `prix`) VALUES "+
-							"(\"PEP\",\"Pépéoni\", 12.50),"+
-							"(\"MAR\",\"Margherita\", 14.00),"+
-							"(\"REI\",\"La Reine\", 11.50),"+
-							"(\"FRO\",\"La 4 fromages\", 12.00),"+
-							"(\"CAN\",\"La cannibale\", 12.50),"+
-							"(\"SAV\",\"La savoyarde\", 13.00),"+
-							"(\"ORI\",\"L'orientale\", 13.50),"+
-							"(\"IND\",\"L'indienne\", 14.00);";
+					"( `code`, `libelle`, `prix`,`categorie`) VALUES "+
+							"(\"PEP\",\"Pépéoni\", 12.50,\"Viande\"),"+
+							"(\"MAR\",\"Margherita\", 14.00,\"Viande\"),"+
+							"(\"REI\",\"La Reine\", 11.50,\"Sans viande\"),"+
+							"(\"FRO\",\"La 4 fromages\", 12.00,\"Sans viande\"),"+
+							"(\"CAN\",\"La cannibale\", 12.50,\"Viande\"),"+
+							"(\"SAV\",\"La savoyarde\", 13.00,\"Sans viande\"),"+
+							"(\"ORI\",\"L'orientale\", 13.50,\"Sans viande\"),"+
+							"(\"IND\",\"L'indienne\", 14.00,\"Sans viande\");";
 			
 			Connection con = connectBdd();
 
