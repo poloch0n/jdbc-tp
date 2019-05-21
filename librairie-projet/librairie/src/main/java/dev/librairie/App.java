@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Query;
 
+import dev.librairie.module.Client;
 import dev.librairie.module.Emprunt;
 import dev.librairie.module.Livre;
 
@@ -65,6 +66,22 @@ public class App
 			} catch(Exception e) {
 				System.out.println("livres pas trouvés");
 			}
+
+        	System.out.println("request d'un client");
+			TypedQuery<Client>query3 = em.createQuery("select c from Client c where c.id = :id",Client.class);
+			try {
+				query3.setParameter("id", 3);
+				Client c = query3.getSingleResult();
+				for (Emprunt ei : c.getEmprunts()) {
+
+					      System.out.println(ei.getDelai() + " => hihi");
+					
+				  }
+			} catch(Exception e) {
+	        	e.printStackTrace();
+				System.out.println("livres pas trouvés");
+			}
+			
 //
         } catch(Exception e) {
         	e.printStackTrace();
