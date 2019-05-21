@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Query;
 
+import dev.librairie.module.Emprunt;
 import dev.librairie.module.Livre;
 
 
@@ -27,7 +28,8 @@ public class App
 
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("bibliotheque-jpa");
             EntityManager em = entityManagerFactory.createEntityManager();
-            
+
+            System.out.println("request exemple1");
             Livre l = em.find(Livre.class,4);
             if(l != null) {
             	System.out.println("livre trouvé");
@@ -37,6 +39,7 @@ public class App
             	System.out.println("livre pas trouvé");
             }
 
+        	System.out.println("request from title");
 			TypedQuery<Livre>query = em.createQuery("select l from Livre l where l.titre like :titre ",Livre.class);
 			query.setParameter("titre", "Apprendre à parler aux animaux");
 
@@ -49,8 +52,22 @@ public class App
             	System.out.println("livre pas trouvé");
             }
 
+        	System.out.println("request d'un emprunt");
+			TypedQuery<Emprunt>query2 = em.createQuery("select e from Emprunt e",Emprunt.class);
+			try {
+				List<Emprunt> l2 = query2.getResultList();
+				for (Emprunt e2 : l2) {
+					for(Livre li : e2.getLivres()) {
+
+					      System.out.println(li.getAuteur() + " => " + li.getTitre());
+					}
+				  }
+			} catch(Exception e) {
+				System.out.println("livres pas trouvés");
+			}
+//
         } catch(Exception e) {
-        	
+        	e.printStackTrace();
         }
     }
 }
