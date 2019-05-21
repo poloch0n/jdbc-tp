@@ -1,5 +1,7 @@
 package fr.pizzeria;
 
+import java.sql.SQLException;
+
 import fr.pizzeria.FromMenu;
 import fr.pizzeria.ShowMenu;
 import fr.pizzeria.exception.PizzaException;
@@ -22,8 +24,9 @@ public class PizzeriaAdminConsoleApp {
 			int answer = FromMenu.getIntFromMenu();
 			try {
 				msf.run(answer).executeUc(daobis);				
-			} catch(PizzaException pizzaException) {
-				
+			} catch(Exception  e) {
+
+				e.printStackTrace();
 			}
 		}
 	}

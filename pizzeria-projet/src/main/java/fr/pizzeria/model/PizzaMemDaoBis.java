@@ -14,6 +14,21 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 
 public class PizzaMemDaoBis implements IPizzaDao{
+	Properties prop;
+	String Environnement;
+	public PizzaMemDaoBis(){
+		try {
+
+			  InputStream input = new FileInputStream("./jdbc.properties");
+			
+			// load a properties file
+			  prop = new Properties();
+			  prop.load(input);
+			  Environnement = prop.getProperty("ENVIRONNEMENT");
+		}  catch (Exception e) {
+	      e.printStackTrace();
+	    }
+	}
 	
 	public Connection connectBdd(){
 		
@@ -22,17 +37,10 @@ public class PizzaMemDaoBis implements IPizzaDao{
 	      Class.forName("com.mysql.jdbc.Driver");
 //	      System.out.println("Driver O.K.");
 
-		  InputStream input = new FileInputStream("./jdbc.properties");
-		
-		// load a properties file
-		  final Properties prop = new Properties();
-		  prop.load(input);
-		  String Environnement = prop.getProperty("ENVIRONNEMENT");
 		  String url = prop.getProperty(Environnement+".MYSQL_ADDON_URL");
 		  // TODO : export logs in external file
 		  String user = prop.getProperty(Environnement+".MYSQL_ADDON_USER");
 		  String passwd = prop.getProperty(Environnement+".MYSQL_ADDON_PASSWORD");
-	      input.close();
 
 	      conn = (Connection) DriverManager.getConnection(url, user, passwd);
 	      System.out.println("Connexion effective !");         
@@ -43,6 +51,49 @@ public class PizzaMemDaoBis implements IPizzaDao{
 		return conn;
 	}
 
+	public void initialiseBddPizza() {
+		try {
+			String sqlDropTablePizzeria = prop.getProperty(Environnement+".sqlDropTablePizzeria");
+//			String sqlDropTablePizzeria = "DROP TABLE if exists `pizzas` ;";
+			String sqlCreateTable = prop.getProperty(Environnement+".sqlCreateTable");
+//			String sqlCreateTable = "CREATE TABLE `pizzas` (\r\n" + 
+//					"  `id_Pizza` int(11) NOT NULL AUTO_INCREMENT,\r\n" + 
+//					"  `code` varchar(3) NOT NULL,\r\n" + 
+//					"  `libelle` varchar(45) NOT NULL,\r\n" + 
+//					"  `prix` decimal(5,2) NOT NULL,\r\n" +
+//					"  `categorie` enum('Viande','Poisson','Sans viande') DEFAULT NULL, \r\n" +
+//					"  PRIMARY KEY (`id_Pizza`)\r\n" + 
+//					") ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;";
+			String sqlInsertPizzas = prop.getProperty(Environnement+".sqlInsertPizzas");
+//					String sqlInsertPizzas = "INSERT INTO `pizzas`\r\n" + 
+//					"( `code`, `libelle`, `prix`,`categorie`) VALUES "+
+//							"(\"PEP\",\"Pépéoni\", 12.50,\"Viande\"),"+
+//							"(\"MAR\",\"Margherita\", 14.00,\"Viande\"),"+
+//							"(\"REI\",\"La Reine\", 11.50,\"Sans viande\"),"+
+//							"(\"FRO\",\"La 4 fromages\", 12.00,\"Sans viande\"),"+
+//							"(\"CAN\",\"La cannibale\", 12.50,\"Viande\"),"+
+//							"(\"SAV\",\"La savoyarde\", 13.00,\"Sans viande\"),"+
+//							"(\"ORI\",\"L'orientale\", 13.50,\"Sans viande\"),"+
+//							"(\"IND\",\"L'indienne\", 14.00,\"Sans viande\");";
+//			
+			Connection con = connectBdd();
+
+		    Statement stmt = (Statement) con.createStatement();
+		    
+		    stmt.executeUpdate(sqlDropTablePizzeria);
+		    stmt.executeUpdate(sqlCreateTable);
+		    stmt.close();
+
+		    PreparedStatement preparedStmt = con.prepareStatement(sqlInsertPizzas);
+		    preparedStmt.executeUpdate();
+		    preparedStmt.close();
+		    
+		} catch(SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public List<Pizza> getPizzas() {
 		List<Pizza> menu = new ArrayList<Pizza>();
 		
@@ -221,40 +272,5 @@ public class PizzaMemDaoBis implements IPizzaDao{
 	
 	private boolean isNegative(double d) {
 	     return Double.compare(d, 0.0) < 0;
-	}
-	
-	public void initialiseBddPizza() {
-		try {
-			String sqlDropTablePizzeria = "DROP TABLE if exists `pizzas` ;";
-			String sqlCreateTable = "CREATE TABLE `pizzas` (\r\n" + 
-					"  `id_Pizza` int(11) NOT NULL AUTO_INCREMENT,\r\n" + 
-					"  `code` varchar(3) NOT NULL,\r\n" + 
-					"  `libelle` varchar(45) NOT NULL,\r\n" + 
-					"  `prix` decimal(5,2) NOT NULL,\r\n" +
-					"  `categorie` enum('Viande','Poisson','Sans viande') DEFAULT NULL, \r\n" +
-					"  PRIMARY KEY (`id_Pizza`)\r\n" + 
-					") ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;";
-			String sqlInsertPizzas = "INSERT INTO `pizzas`\r\n" + 
-					"( `code`, `libelle`, `prix`,`categorie`) VALUES "+
-							"(\"PEP\",\"Pépéoni\", 12.50,\"Viande\"),"+
-							"(\"MAR\",\"Margherita\", 14.00,\"Viande\"),"+
-							"(\"REI\",\"La Reine\", 11.50,\"Sans viande\"),"+
-							"(\"FRO\",\"La 4 fromages\", 12.00,\"Sans viande\"),"+
-							"(\"CAN\",\"La cannibale\", 12.50,\"Viande\"),"+
-							"(\"SAV\",\"La savoyarde\", 13.00,\"Sans viande\"),"+
-							"(\"ORI\",\"L'orientale\", 13.50,\"Sans viande\"),"+
-							"(\"IND\",\"L'indienne\", 14.00,\"Sans viande\");";
-			
-			Connection con = connectBdd();
-
-		    Statement stmt = (Statement) con.createStatement();
-		    
-		    stmt.executeUpdate(sqlDropTablePizzeria);
-		    stmt.executeUpdate(sqlCreateTable);
-		    stmt.executeUpdate(sqlInsertPizzas);
-		} catch(SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
