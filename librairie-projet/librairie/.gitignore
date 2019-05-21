@@ -1,0 +1,7 @@
+.classpath
+.project
+.settings/
+jdbc.properties
+target/
+/src/test/
+bin/
