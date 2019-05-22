@@ -24,6 +24,9 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
 		<class>dev.banque.modele.Compte</class>
 		<class>dev.banque.modele.Operation</class>
 
+		<class>dev.banque.modele.LivretA</class>
+		<class>dev.banque.modele.AssuranceVie</class>
+		<class>dev.banque.modele.Virement</class>
 		<properties>
 			<property name="hibernate.archive.autodetection" value="" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />

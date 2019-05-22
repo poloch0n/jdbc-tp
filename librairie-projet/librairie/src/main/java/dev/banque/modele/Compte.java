@@ -5,7 +5,9 @@ import java.util.Set;
 import javax.persistence.*;
 @Entity
 @Table( name="compte")
-public class Compte {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE )
+@DiscriminatorColumn(name = "type")
+public class Compte{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -13,7 +15,7 @@ public class Compte {
 	@Column(name = "numero", length = 50,unique = false)
 	private Integer numero;
 	@Column(name = "solde", length = 50,unique = false)
-	private String solde;
+	private Double solde;
 
 	@ManyToMany
 	@JoinTable(
@@ -27,46 +29,42 @@ public class Compte {
 	@OneToMany(mappedBy="compte")
 	private Set<Operation> operations;
 	
-	public Compte() {
-		clients = new HashSet<Client>();
-		operations = new HashSet<Operation>();
-	}
-
-
 	public Integer getId() {
 		return id;
 	}
-
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
 	public Integer getNumero() {
 		return numero;
 	}
-
 
 	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 
-
-	public String getSolde() {
+	public Double getSolde() {
 		return solde;
 	}
 
-
-	public void setSolde(String solde) {
-		this.solde = solde;
+	public void setSolde(double d) {
+		this.solde = d;
 	}
 
+	public Compte() {
+		clients = new HashSet<Client>();
+		operations = new HashSet<Operation>();
+	}
 
 	public Set<Client> getClients() {
 		return clients;
 	}
 
+	public void addClient(Client client) {
+		this.clients.add(client);
+	}
 
 	public void setClients(Set<Client> clients) {
 		this.clients = clients;

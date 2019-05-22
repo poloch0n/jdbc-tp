@@ -1,5 +1,6 @@
 package dev.librairie.module;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -49,6 +50,7 @@ public class Client {
 	public void setEmprunts(Set<Emprunt> emprunts) {
 		Emprunts = emprunts;
 	}
+
 
 	
 }

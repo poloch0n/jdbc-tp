@@ -1,12 +1,12 @@
 package dev.banque.modele;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.*;
 @Entity
 @Table( name="operation")
-public class Operation {
+@DiscriminatorColumn(name = "type")
+public class Operation{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -18,7 +18,6 @@ public class Operation {
 	@Column(name = "motif", length = 50,unique = false)
 	private String motif;
 	
-
 	@ManyToOne
 	@JoinColumn(name="Compte_id")
 	private Compte compte;
