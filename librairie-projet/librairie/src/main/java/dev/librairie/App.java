@@ -82,6 +82,8 @@ public class App
 				System.out.println("livres pas trouvés");
 			}
 			
+            entityManagerFactory = Persistence.createEntityManagerFactory("banque-tp-jpa");
+            em = entityManagerFactory.createEntityManager();
 //
         } catch(Exception e) {
         	e.printStackTrace();
